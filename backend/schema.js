@@ -1,10 +1,10 @@
-const zod = require("zod")
+const zod = require("zod");
 
 const signupSchema = zod.object({
-    username: zod.string(),
-    password: zod.string(),
+    username: zod.string().email(),
     first_name: zod.string(),
     last_name: zod.string(),
+    password: zod.string()
 })
 
 const userBody = zod.object({
@@ -19,6 +19,9 @@ const signinBody = zod.object({
 })
 
 
-module.exports = signupSchema
-module.exports = userBody
-module.exports = signinBody
+module.exports = {signupSchema,
+    userBody,
+    signinBody
+}
+// module.exports = userBody
+// module.exports = signinBody

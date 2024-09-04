@@ -1,3 +1,5 @@
-const JWT_SECTET = 'secret'
+const JWT_SECRET='secret'
 
-module.exports = JWT_SECTET
+module.exports = {
+    JWT_SECRET
+};

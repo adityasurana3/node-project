@@ -1,7 +1,12 @@
 import { useSearchParams } from 'react-router-dom';
+import axios from "axios";
 import { useState } from 'react';
 
 export const SendMoney = () => {
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get("id");
+    const name = searchParams.get("name");
+    const [amount, setAmount] = useState(0);
 
     return <div class="flex justify-center h-screen bg-gray-100">
         <div className="h-full flex flex-col justify-center">
@@ -36,7 +41,16 @@ export const SendMoney = () => {
                         placeholder="Enter amount"
                     />
                     </div>
-                    <button className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
+                    <button onClick={() => {
+                        axios.post("http://localhost:3000/api/v1/account/transfer", {
+                            to: id,
+                            amount
+                        }, {
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem("token")
+                            }
+                        })
+                    }} class="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
                         Initiate Transfer
                     </button>
                 </div>

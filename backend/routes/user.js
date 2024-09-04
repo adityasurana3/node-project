@@ -1,18 +1,19 @@
 const { Router } = require("express");
 const router = Router()
-const User = require('../db')
-const signupSchema = require("../schema")
+const {User} = require('../db')
+const { signupSchema } = require("../schema")
 const userBody = require("../schema")
 const signinBody = require("../schema")
-const {jwt} = require("jsonwebtoken")
-const { JWT_SECRET } = require("../config")
+const jwt = require("jsonwebtoken")
+const {JWT_SECRET} = require("../config")
 const { userMiddleware } = require('../middleware')
-const zod = require("zod")
 
 
 router.post('/signup', async (req, res) => {
     const body = req.body
+        
     const obj= signupSchema.safeParse(req.body)
+    
     if (!obj.success){
         return res.json({message: "Something went wrong"})
     }
@@ -55,7 +56,7 @@ router.post('/signin', userMiddleware, async (req, res) => {
     res.status(411).json({message: "Error while logging in"})
 })
 
-router.put('/update', userMiddleware ,async (req, res) => {
+router.put('/update' ,async (req, res) => {
     body = req.body;
     const obj = userBody.safeParse(body)
     if (!obj.success){
@@ -69,18 +70,21 @@ router.put('/update', userMiddleware ,async (req, res) => {
     })
 })
 
-router.get('/bulk', userMiddleware, async (req, res) => {
+router.get('/bulk', async (req, res) => {
     const filter = req.query.filter || ''
+    
     const users = await User.find({
         $or: [{
-            first_name:{
+            first_name: {
                 "$regex": filter
-            },
-            last_name:{
+            }
+        }, {
+            last_name: {
                 "$regex": filter
             }
         }]
     })
+    
     res.json({
         user: users.map(user => ({
             username: user.username,
